@@ -1,19 +1,19 @@
 # Uncomment the required imports before adding the code
 
-# from django.shortcuts import render
-# from django.http import HttpResponseRedirect, HttpResponse
-# from django.contrib.auth.models import User
-# from django.shortcuts import get_object_or_404, render, redirect
-# from django.contrib.auth import logout
-# from django.contrib import messages
-# from datetime import datetime
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth import logout
+from django.contrib import messages
+from datetime import datetime
 
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
-# from .populate import initiate
+from .populate import initiate
 
 
 # Get an instance of a logger
@@ -21,6 +21,16 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+@csrf_exempt
+def login_user(request):
+    data = json.loads(request.body)
+    username = data.get('userName')
+    password = data.get('password')
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return JsonResponse({"userName": username, "status": "Authenticated"})
+    return JsonResponse({"status": "unauthorized"}, status=401)
 
 # Create a `login_request` view to handle sign in request
 @csrf_exempt
@@ -39,8 +49,12 @@ def login_user(request):
     return JsonResponse(data)
 
 # Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+@csrf_exempt
+def logout_request(request):
+    if request.method == 'POST':
+        logout(request)
+        return JsonResponse({'status': 'logged out'})
+    return JsonResponse({'status': 'invalid method'}, status=400)
 
 # Create a `registration` view to handle sign up request
 # @csrf_exempt
