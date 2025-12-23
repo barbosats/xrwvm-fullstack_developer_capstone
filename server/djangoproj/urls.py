@@ -1,18 +1,40 @@
-"""djangoproj URL Configuration
+# """djangoproj URL Configuration
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+# The `urlpatterns` list routes URLs to views. For more information please see:
+#     https://docs.djangoproject.com/en/3.2/topics/http/urls/
+# Examples:
+# Function views
+#     1. Add an import:  from my_app import views
+#     2. Add a URL to urlpatterns:  path('', views.home, name='home')
+# Class-based views
+#     1. Add an import:  from other_app.views import Home
+#     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+# Including another URLconf
+#     1. Import the include() function: from django.urls import include, path
+#     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+# """
+# from django.contrib import admin
+# from django.urls import path, include
+# from django.views.generic import TemplateView
+# from django.conf.urls.static import static
+# from django.conf import settings
+
+# urlpatterns = [
+#     path('dealer/<int:dealer_id>',TemplateView.as_view(template_name="index.html")),
+#     path('postreview/<int:dealer_id>',TemplateView.as_view(template_name="index.html")),
+#     path('djangoapp/reviews/dealer/<int:dealer_id>', views.get_dealer_reviews),
+#     path('register/', TemplateView.as_view(template_name="index.html")),
+#     path('login/', TemplateView.as_view(template_name="index.html")),
+#     path('about/', TemplateView.as_view(template_name="About.html")),
+#     path('admin/', admin.site.urls),
+#     path('contact/', TemplateView.as_view(template_name="Contact.html")),
+#     path('dealers/', TemplateView.as_view(template_name="index.html")),
+#     path('djangoapp/', include('djangoapp.urls')),
+#     path('', TemplateView.as_view(template_name="Home.html")),
+# ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
@@ -20,11 +42,21 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+    # Rotas que servem o React
+    path('dealer/<int:dealer_id>', TemplateView.as_view(template_name="index.html")),
+    path('postreview/<int:dealer_id>', TemplateView.as_view(template_name="index.html")),
     path('register/', TemplateView.as_view(template_name="index.html")),
     path('login/', TemplateView.as_view(template_name="index.html")),
+    path('dealers/', TemplateView.as_view(template_name="index.html")),
+
+    # Páginas estáticas
     path('about/', TemplateView.as_view(template_name="About.html")),
-    path('admin/', admin.site.urls),
     path('contact/', TemplateView.as_view(template_name="Contact.html")),
-    path('djangoapp/', include('djangoapp.urls')),
     path('', TemplateView.as_view(template_name="Home.html")),
+
+    # Admin
+    path('admin/', admin.site.urls),
+
+    # API Django (vem do app)
+    path('djangoapp/', include('djangoapp.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
