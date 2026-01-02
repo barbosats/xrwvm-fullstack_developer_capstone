@@ -7,12 +7,14 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+
 # from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import CarMake, CarModel
 from .populate import initiate
 from .restapis import get_request, post_review
+
 # from .restapis import analyze_review_sentiments
 
 
@@ -69,8 +71,7 @@ def get_cars(request):
     if CarMake.objects.count() == 0:
         initiate()
     car_models = CarModel.objects.select_related("car_make")
-    cars = [{"CarModel": cm.name, "CarMake": cm.car_make.name}
-            for cm in car_models]
+    cars = [{"CarModel": cm.name, "CarMake": cm.car_make.name} for cm in car_models]
     return JsonResponse({"CarModels": cars})
 
 
