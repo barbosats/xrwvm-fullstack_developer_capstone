@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-// const { Int32 } = require('mongodb');
->>>>>>> a6ff2438bae730cc5484734bd84458cfda4d5d32
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
