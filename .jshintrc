@@ -1,0 +1,18 @@
+{
+    "esversion": 8,        // habilita recursos modernos (async/await, const, let, =>)
+    "node": true,          // reconhece ambiente Node.js
+    "undef": true,         // acusa variáveis não definidas
+    "unused": true,        // acusa variáveis não usadas
+    "globals": {           // define variáveis globais permitidas
+      "describe": false,
+      "it": false,
+      "before": false,
+      "after": false
+    },
+    "exclude": [           // ignora arquivos/pastas
+      "node_modules",
+      "package.json",
+      "package-lock.json"
+    ]
+  }
+  
