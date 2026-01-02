@@ -1,15 +1,19 @@
 # Uncomment the required imports before adding the code
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
-from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate, logout as django_logout
-import logging
 import json
+import logging
+
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout as django_logout
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+# from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
-from .populate import initiate
+
 from .models import CarMake, CarModel
-from .restapis import get_request, analyze_review_sentiments, post_review
+from .populate import initiate
+from .restapis import get_request, post_review
+# from .restapis import analyze_review_sentiments
 
 
 logger = logging.getLogger(__name__)
@@ -81,39 +85,6 @@ def get_dealerships(request, state="All"):
     return JsonResponse({"status": 200, "dealers": dealerships})
 
 
-# Create a `get_dealer_reviews` view to render the reviews of a dealer
-# def get_dealer_reviews(request, dealer_id):
-#     try:
-#         endpoint = f"/fetchReviews/dealer/{dealer_id}"
-#         reviews = get_request(endpoint) or []
-
-#         safe_reviews = []
-#         for review_detail in reviews:
-#             review = {
-#                 "review": review_detail.get("review", ""),
-#                 "full_name": review_detail.get("full_name") or review_detail.get("name") or "Anonymous",
-#                 "car_make": review_detail.get("car_make", ""),
-#                 "car_model": review_detail.get("car_model", ""),
-#                 "purchase_date": review_detail.get("purchase_date", "")
-#             }
-
-#             if review["review"]:
-#                 try:
-#                     response = analyze_review_sentiments(review["review"]) or {}
-#                     review["sentiment"] = response.get("sentiment", "neutral")
-#                 except Exception:
-#                     review["sentiment"] = "neutral"
-#             else:
-#                 review["sentiment"] = "neutral"
-
-#             safe_reviews.append(review)
-
-#         return JsonResponse({"reviews": safe_reviews}, safe=False)
-#     except Exception as e:
-#         logger.error(f"Erro em get_dealer_reviews: {e}")
-#         return JsonResponse({"status": 500, "message": str(e)}, status=500)
-
-
 def get_dealer_reviews(request, dealer_id):
     try:
         endpoint = f"/fetchReviews/dealer/{dealer_id}"
@@ -166,12 +137,12 @@ def get_dealer_details(request, dealer_id):
 
 
 def add_review(request):
-    if request.user.is_anonymous == False:
+    if not request.user.is_anonymous:
         data = json.loads(request.body)
         try:
-            response = post_review(data)
+            post_review(data)  # não precisa guardar em 'response' se não usa
             return JsonResponse({"status": 200})
-        except:
+        except Exception:
             return JsonResponse({"status": 401, "message": "Error in posting review"})
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
